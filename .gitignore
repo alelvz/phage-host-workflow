@@ -1,0 +1,43 @@
+# Data files (too large for GitHub)
+data/*.fastq
+data/*.fastq.gz
+data/*.fasta
+data/*.fna
+data/*.fa
+*.bam
+*.sam
+
+# Results (too large)
+results/*/
+!results/.gitkeep
+
+# Logs
+logs/*.log
+logs/*.out
+logs/*.err
+!logs/.gitkeep
+
+# Database files
+databases/
+*_db/
+*.db
+*.dmnd
+
+# Conda/Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+._*
+
+# Temporary files
+*.tmp
+*~
+.snakemake/
+
+# SLURM files
+slurm-*.out
