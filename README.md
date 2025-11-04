@@ -52,7 +52,7 @@ Predict bacterial hosts for identified phages using iPHoP and other tools.
 ## Data Download
 
 The sequencing data for isolate rh11 can be downloaded from NCBI SRA:
-- **SRA Accession**: PRJNA1065643
+- **SRA Accession**: PRJNA1356378
 
 Required files:
 - `rh11_ilmn_R1.fastq.gz` - Illumina forward reads
@@ -101,15 +101,9 @@ sbatch 01_assemblies.sh
 
 ## Citation
 
-If you use this workflow, please cite:
-
-Lopez-Velazquez, A., Kulmanov, M., & Hoehndorf, R. (2025). Computational prediction of DNA phage–host interaction: complete workflow, quality control, and interpretation. *Book Chapter*.
 
 ## Contact
 
 For questions or issues, please contact:
 - Robert Hoehndorf: robert.hoehndorf@kaust.edu.sa
-
-## License
-
-This workflow is provided for educational and research purposes.
+- Alejandra Lopez-Velazquez: alejandra.velazquez@kaust.edu.sa
