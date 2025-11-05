@@ -22,10 +22,7 @@
 # Output: Quality-controlled reads and statistics in ../results/00_qc_reads/
 # ================================
 
-
-# Load required modules
-module load fastp
-module load seqkit
+source ~/miniconda3/etc/profile.d/conda.sh
 
 # ================================
 # CONFIGURATION
@@ -58,6 +55,8 @@ echo "================================"
 echo "[1] Processing Illumina reads with fastp..."
 echo "================================"
 
+conda activate fastp
+
 fastp \
     -i "${ILMN_R1}" \
     -I "${ILMN_R2}" \
@@ -67,6 +66,8 @@ fastp \
     -h "${ILMN_OUT}/${SAMPLE}.html" \
     -w ${THREADS}
 
+conda deactivate
+
 echo "✓ Illumina QC complete"
 
 # ================================
@@ -75,6 +76,8 @@ echo "✓ Illumina QC complete"
 echo "================================"
 echo "[2] Generating PacBio HiFi statistics..."
 echo "================================"
+
+conda activate seqkit
 
 seqkit stats \
     -j ${THREADS} \

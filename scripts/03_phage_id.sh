@@ -17,13 +17,6 @@
 # ================================
 
 set -euo pipefail
-
-# Load required modules
-module load genomad
-module load virsorter2
-module load vibrant
-
-# Activate conda environments as needed
 source ~/miniconda3/etc/profile.d/conda.sh
 
 # ================================
@@ -124,6 +117,7 @@ for fasta in ${ASSEMBLY_DIR}/*.fa; do
     # --------------------------------
     echo ""
     echo "[3/${asm_name}] Running VIBRANT..."
+    conda activate vibrant
     
     vibrant_out="${OUT_DIR}/vibrant/${asm_name}"
     mkdir -p "$vibrant_out"
@@ -139,6 +133,8 @@ for fasta in ${ASSEMBLY_DIR}/*.fa; do
         echo "  ⊗ VIBRANT output exists, skipping..."
     fi
     
+    conda deactivate vibrant
+
     # --------------------------------
     # 4. Phamer (PhaBOX)
     # --------------------------------

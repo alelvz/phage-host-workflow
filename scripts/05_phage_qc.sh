@@ -18,8 +18,6 @@
 set -euo pipefail
 
 source ~/miniconda3/etc/profile.d/conda.sh
-module load seqkit
-
 
 # ================================
 # CONFIGURATION
@@ -71,7 +69,7 @@ for sample in $(ls ${PHAGE_CONTIGS}/*_contigs.fasta | xargs -n1 basename | sed '
     # -----------------------------
     echo "[2/4] Filtering CheckV results with utils/05_quality_filter.py..."
 
-    module load python/3.9
+    conda activate python-utils
 
     python utils/05_quality_filter.py \
         --checkv_summary "${CHECKV_OUT}/${sample}/quality_summary.tsv" \
@@ -88,7 +86,7 @@ for sample in $(ls ${PHAGE_CONTIGS}/*_contigs.fasta | xargs -n1 basename | sed '
         --input_dir "${CHECKV_OUT}/${sample}" \
         --output_dir "${CLEAN_FASTA}"
 
-    module unload python/3.9
+    conda deactivate
 
     # -----------------------------
     # 4. Run vclust clustering
@@ -129,6 +127,9 @@ for sample in $(ls ${PHAGE_CONTIGS}/*_contigs.fasta | xargs -n1 basename | sed '
     # 4. Extract vOTU representatives
     # -----------------------------
     #echo "[4/4] Extracting vOTU representatives..."
+
+    #conda activate seqkit
+
     #cut -f2 "${VCLUST_OUT}/${sample}/votus.tsv" | sort -u > "${VCLUST_OUT}/${sample}/votus.repr.ids"
     #seqkit grep -f "${VCLUST_OUT}/${sample}/votus.repr.ids" \
     #    "${CLEAN_FASTA}/${sample}_checkv.fasta" \

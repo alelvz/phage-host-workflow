@@ -1,0 +1,21 @@
+name: autocycler
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.10
+  - autocycler
+  - canu
+  - flye
+  - metamdbg
+  - miniasm
+  - minipolish[version='>=0.2.0']
+  - myloasm[version='>=0.1.0']
+  - necat
+  - nextdenovo
+  - nextpolish[version='>=1.4.1']
+  - plassembler[version='>=1.8.0']
+  - racon[version='>=1.5.0']
+  - raven-assembler[version='>=1.8.3']
+  - wtdbg[version='>=2.5']

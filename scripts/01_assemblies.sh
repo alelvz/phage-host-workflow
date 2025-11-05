@@ -20,17 +20,7 @@
 # ================================
 
 set -euo pipefail
-
-# Load required modules
-module load hifiasm/0.25.0
-module load flye/2.9.5
-module load megahit/1.2.9 
-module load spades/3.15.5
-module load seqkit
-
-# Activate conda for Autocycler
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate autocycler
 
 PHAGE_WF="/ibex/scratch/projects/c2014/alelopezv/phage-host-workflow"
 AUTOCYCLER_SCRIPT="${PHAGE_WF}/scripts/utils/autocycler_full.sh"
@@ -72,18 +62,22 @@ echo "================================"
 # MEGAHIT
 echo ""
 echo "[1.1] Running MEGAHIT..."
+conda activate megahit
 megahit -1 "${ILMN_R1}" -2 "${ILMN_R2}" \
         -o "${ASSEMBLY_DIR}/illumina/megahit" \
         -t ${THREADS}
+conda deactivate
 echo "✓ MEGAHIT complete"
 
 # SPAdes
 echo ""
 echo "[1.2] Running SPAdes..."
+conda activate spades
 spades.py -1 "${ILMN_R1}" -2 "${ILMN_R2}" \
           -o "${ASSEMBLY_DIR}/illumina/spades" \
           -t ${THREADS} \
           -m 60
+conda deactivate
 echo "✓ SPAdes complete"
 
 # ================================
@@ -96,18 +90,21 @@ echo "================================"
 # Flye
 echo ""
 echo "[2.1] Running Flye (PacBio)..."
+conda activate flye
 flye --pacbio-hifi "${HIFI}" \
      --out-dir "${ASSEMBLY_DIR}/pacbio/flye" \
      --threads ${THREADS}
+conda deactivate
 echo "✓ Flye (PacBio) complete"
 
 # hifiasm
 echo ""
 echo "[2.2] Running hifiasm (PacBio)..."
+conda activate hifiasm
 hifiasm -o "${ASSEMBLY_DIR}/pacbio/hifiasm/${SAMPLE}.asm" \
         -t ${THREADS} \
         "${HIFI}"
-
+conda deactivate
 echo "  Converting GFA to FASTA..."
 awk '/^S/{print ">"$2"\n"$3}' "${ASSEMBLY_DIR}/pacbio/hifiasm/${SAMPLE}.asm.bp.p_ctg.gfa" \
     > "${ASSEMBLY_DIR}/pacbio/hifiasm/assembly.fasta"
@@ -118,7 +115,9 @@ echo "✓ hifiasm (PacBio) complete"
 echo ""
 echo "[2.3] Running Autocycler (PacBio)..."
 cd "${ASSEMBLY_DIR}/pacbio/autocycler"
+conda activate autocycler
 "${AUTOCYCLER_SCRIPT}" "${HIFI}" ${THREADS} 4 pacbio_hifi
+conda deactivate
 cd - > /dev/null
 echo "✓ Autocycler (PacBio) complete"
 
@@ -132,18 +131,22 @@ echo "================================"
 # Flye
 echo ""
 echo "[3.1] Running Flye (ONT)..."
+conda activate flye
 flye --nano-raw "${ONT}" \
      --out-dir "${ASSEMBLY_DIR}/ont/flye" \
      --threads ${THREADS}
+conda deactivate
 echo "✓ Flye (ONT) complete"
 
 # hifiasm
 echo ""
 echo "[3.2] Running hifiasm (ONT)..."
+conda activate hifiasm
 hifiasm -o "${ASSEMBLY_DIR}/ont/hifiasm/${SAMPLE}.asm" \
         --ont \
         -t ${THREADS} \
         "${ONT}"
+conda deactivate
 
 echo "  Converting GFA to FASTA..."
 awk '/^S/{print ">"$2"\n"$3}' "${ASSEMBLY_DIR}/ont/hifiasm/${SAMPLE}.asm.bp.p_ctg.gfa" \
@@ -155,7 +158,9 @@ echo "✓ hifiasm (ONT) complete"
 echo ""
 echo "[3.3] Running Autocycler (ONT)..."
 cd "${ASSEMBLY_DIR}/ont/autocycler"
+conda activate autocycler
 "${AUTOCYCLER_SCRIPT}" "${ONT}" ${THREADS} 4 ont_r10
+conda deactivate
 cd - > /dev/null
 echo "✓ Autocycler (ONT) complete"
 

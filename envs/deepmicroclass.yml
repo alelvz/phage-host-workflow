@@ -1,0 +1,8 @@
+name: deepmicroclass
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - deepmicroclass
+

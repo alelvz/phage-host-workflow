@@ -20,8 +20,7 @@
 # Output: Filtered assemblies in ../results/02_qc_assemblies/
 # ================================
 
-module load seqkit
-module load quast
+source ~/miniconda3/etc/profile.d/conda.sh
 
 # ================================
 # CONFIGURATION
@@ -156,6 +155,9 @@ FILTERED_DIR="${OUT_DIR}/filtered"
 
 # Illumina assemblies: keep contigs ≥ 1 kb
 echo "  [Illumina] Filtering with threshold: ${MIN_LEN_ILLUMINA} bp"
+
+conda activate seqkit
+
 for f in ${RAW_DIR}/illumina.*.assembly.fa; do
     [[ -f "$f" ]] || continue
     base=$(basename $f .assembly.fa)
@@ -187,11 +189,14 @@ for f in ${RAW_DIR}/ont.*.assembly.fa; do
     seqkit seq -m ${MIN_LEN_LONG} "$f" > "$out"
 done
 
+conda deactivate
+
 # ================================
 # 4. RUN QUAST ON FILTERED ASSEMBLIES
 # ================================
 echo ""
 echo "[4] Running QUAST on filtered assemblies..."
+conda activate quast
 
 # Run QUAST separately for each filtered assembly
 for f in ${FILTERED_DIR}/*.fa; do
