@@ -87,85 +87,63 @@ for f in envs/*.yml; do conda env create -f "$f"; done
 
 Before running the main workflow, execute the following commands to download and configure all external reference databases.
 
-### Prerequisite: Create the Base Directory
+#### Prerequisite: Create the Base Directory
 
 ```bash
 mkdir -p /path/to/db
 ```
 
------
-
-### GTDB-Tk (Reference Taxonomy) 
+#### GTDB-Tk (Reference Taxonomy) 
 
 The database requires **\~140 GB** of space.
 
-1.  **Create the Target Directory:**
-    ```bash
-    mkdir -p /path/to/db/gtdbtk_db
-    ```
-2.  **Download the Full Package Archive:**
-    ```bash
-    wget -P /path/to/db/gtdbtk_db https://data.ace.uq.edu.au/public/gtdb/data/releases/latest/auxillary_files/gtdbtk_package/full_package/gtdbtk_data.tar.gz
-    ```
-3.  **Unarchive the Data:**
-    ```bash
-    tar xvzf /path/to/db/gtdbtk_db/gtdbtk_data.tar.gz -C /path/to/db/gtdbtk_db --strip-components 1
-    ```
+**Create the Target Directory:**
+```bash
+mkdir -p /path/to/db/gtdbtk_db
+wget -P /path/to/db/gtdbtk_db https://data.ace.uq.edu.au/public/gtdb/data/releases/latest/auxillary_files/gtdbtk_package/full_package/gtdbtk_data.tar.gz
+tar xvzf /path/to/db/gtdbtk_db/gtdbtk_data.tar.gz -C /path/to/db/gtdbtk_db
+```
 
-### CheckV (Viral Completeness)
+#### CheckV (Viral Completeness)
 
 ```bash
 checkv download_database /path/to/db/checkv_db
 ```
 
-### GeNomad (Viral & MGE Classification)
+#### GeNomad (Viral & MGE Classification)
 
 ```bash
 genomad download-db /path/to/db/genomad_db
 ```
 
-### VirSorter2 (Viral Identification)
+#### VirSorter2 (Viral Identification)
 
 ```bash
 virsorter setup -d /path/to/db/virsorter2_db -j 4
 ```
 
-### PhaBOX (Phage Identification)
+#### PhaBOX (Phage Identification)
+```bash
+mkdir -p /path/to/db/phabox_db
+wget -P /tmp/ https://github.com/KennthShang/PhaBOX/releases/download/v2/phabox_db_v2_1.zip
+unzip /tmp/phabox_db_v2_1.zip -d /path/to/db/phabox_db
+```
 
-1.  **Create the Target Directory:**
-    ```bash
-    mkdir -p /path/to/db/phabox_db
-    ```
-2.  **Download Archive to Temporary Location:**
-    ```bash
-    wget -P /tmp/ https://github.com/KennthShang/PhaBOX/releases/download/v2/phabox_db_v2_1.zip
-    ```
-3.  **Unzip to DB Path:**
-    ```bash
-    unzip /tmp/phabox_db_v2_1.zip -d /path/to/db/phabox_db
-    ```
-
-### VIBRANT (Functional Annotation)
+#### VIBRANT (Functional Annotation)
 
 VIBRANT requires the database path to be explicitly set after its internal script, `download-db.sh`, runs.
 
-1.  **Run Setup Script:**
-    ```bash
-    download-db.sh
-    export VIBRANT_DB=/path/to/VIBRANT_databases
-    ```
------
+```bash
+download-db.sh
+export VIBRANT_DB=/path/to/VIBRANT_databases
+```
 
-### PLASMe (Plasmid Identification) 
+#### PLASMe (Plasmid Identification) 
 
-1.  **Create the Target Directory:**
-    ```bash
-    mkdir -p /path/to/db/plasme_db
-    ```
-2.  **Setup Command:**
-    ```bash
-    python /path/to/phage-workflow/scripts/utils/PLASMe/PLASMe_db.py --outdir /path/to/db/plasme_db
-    ```
+```bash
+mkdir -p /path/to/db/plasme_db
+python /path/to/phage-workflow/scripts/utils/PLASMe/PLASMe_db.py --outdir /path/to/db/plasme_db
+```
 
 -----
 
