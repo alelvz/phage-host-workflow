@@ -86,6 +86,9 @@ for f in envs/*.yml; do conda env create -f "$f"; done
 ## 📚 Database Setup
 
 Before running the main workflow, execute the following commands to download and configure all external reference databases.
+Before running any step of the main workflow, you must execute the following commands to download and configure all external reference databases. You must replace /path/to/db with your actual, desired absolute directory path.
+
+General Note: You should activate the specific Conda environment for each tool before running its respective download command. For detailed usage, always refer to the tool's official GitHub repository or documentation.
 
 #### Prerequisite: Create the Base Directory
 
@@ -97,7 +100,6 @@ mkdir -p /path/to/db
 
 The database requires **\~140 GB** of space.
 
-Create the Target Directory:
 ```bash
 mkdir -p /path/to/db/gtdbtk_db
 wget -P /path/to/db/gtdbtk_db https://data.ace.uq.edu.au/public/gtdb/data/releases/latest/auxillary_files/gtdbtk_package/full_package/gtdbtk_data.tar.gz
