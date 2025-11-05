@@ -1,60 +1,68 @@
-# Computational Prediction of DNA Phage–Host Interaction: Workflow
+# 🧬 Computational Prediction of DNA Phage–Host Interactions: Complete Workflow
 
-This repository contains a reproducible workflow for predicting DNA phage–host interactions from sequencing data, as described in the book chapter "Computational prediction of DNA phage–host interaction: complete workflow, quality control, and interpretation" by Lopez-Velazquez et al.
+This repository provides a **fully reproducible workflow** for predicting DNA phage–host interactions from sequencing data, accompanying the book chapter:
 
-## Overview
+> **Lopez-Velazquez et al.**  
+> *Computational prediction of DNA phage–host interaction: complete workflow, quality control, and interpretation.*
 
-This workflow demonstrates phage identification and host prediction using a single bacterial isolate (rh11) cultured from desert soil and sequenced with three technologies:
-- **Illumina** short reads (paired-end)
-- **PacBio HiFi** long reads
-- **Oxford Nanopore (ONT)** long reads
+---
 
-## Repository Structure
+## 🧠 Overview
 
-```
-phage_host_workflow/
-├── data/                    # Raw sequencing data
-├── scripts/                 # Analysis scripts
-│   ├── 00_qc_reads.sh
-│   ├── 01_assemblies.sh
-│   ├── 02_qc_assemblies.sh
-│   └── 03_phage_id.sh
-└── results/                 # Analysis results
-    ├── 00_qc_reads/
-    ├── 01_assemblies/
-    ├── 02_qc_assemblies/
-    ├── 03_phage_id/
-    ├── 04_consolidated/
-    ├── 05_checkv/
-    └── 06_host/
-```
+This workflow performs **end-to-end phage discovery and host prediction**, combining multiple sequencing technologies and computational tools for robust analysis.  
+It demonstrates the complete process using a bacterial isolate (*rh11*) cultured from desert soil, sequenced with:
 
-## Workflow Steps
+- 🧫 **Illumina** — short paired-end reads  
+- 🧬 **PacBio HiFi** — long, high-accuracy reads  
+- 🔬 **Oxford Nanopore (ONT)** — ultra-long reads  
 
-### Step 0: Quality Control of Reads
-Assess and filter raw sequencing reads using fastp (Illumina) and seqkit (PacBio, ONT).
+The pipeline integrates:
+- Read quality control  
+- Genome assembly  
+- Phage identification  
+- Genome quality evaluation  
+- vOTU clustering  
+- Host prediction  
 
-### Step 1: Assembly
-Assemble reads into contigs using technology-appropriate assemblers.
+---
 
-### Step 2: Assembly Quality Control
-Evaluate assembly quality and filter contigs.
+## ⚙️ Workflow Summary
 
-### Step 3: Phage Identification
-Identify phage sequences using multiple tools (VirSorter2, GeNomad, VIBRANT, Phamer, DeepMicroClass).
+### **Step 0 – Read Quality Control**
+Perform read trimming and filtering:  
+- **fastp** for Illumina reads  
+- **seqkit** for PacBio and ONT reads  
 
-### Step 4: Quality Check and Clustering
-Assess phage genome completeness with CheckV and cluster into vOTUs.
+### **Step 1 – Genome Assembly**
+Assemble reads with technology-specific assemblers:  
+- Illumina → **MEGAHIT**, **SPAdes**  
+- PacBio → **Flye**, **hifiasm**, **Autocycler**  
+- ONT → **Flye**, **hifiasm**, **Autocycler**
 
-### Step 5: Host Prediction
-Predict bacterial hosts for identified phages using iPHoP and other tools.
+### **Step 2 – Assembly Consolidation**
+Merge and standardize assemblies for downstream analysis.
 
-## Data Download
+### **Step 3 – Phage Identification**
+Detect and classify viral contigs using multiple complementary tools:  
+**VirSorter2**, **GeNomad**, **VIBRANT**, **PhaBOX**, **DeepMicroClass**, and **PLASMe**.
 
-The sequencing data for isolate rh11 can be downloaded from NCBI SRA:
-- **SRA Accession**: PRJNA1356378
+### **Step 4 – Phage Quality Control and Clustering**
+- Assess genome completeness with **CheckV**.  
+- Cluster phage genomes into **vOTUs** using **vclust** (95% ANI, 85% AF).  
 
-Required files:
+### **Step 5 – Host Prediction**
+Predict bacterial hosts using **iPHoP**, **GTDB-Tk**, and complementary taxonomy tools.  
+
+---
+
+## 🧩 Data Download
+
+Sequencing data for isolate *rh11* can be obtained from NCBI SRA:
+
+- **Project Accession:** [PRJNA1356378](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1356378)
+
+Expected files:
+
 - `rh11_ilmn_R1.fastq.gz` - Illumina forward reads
 - `rh11_ilmn_R2.fastq.gz` - Illumina reverse reads
 - `rh11_hifi.fastq.gz` - PacBio HiFi reads
@@ -62,41 +70,46 @@ Required files:
 
 Place these files in the `data/` directory.
 
-## Requirements
 
-### Software Dependencies
-- fastp (≥0.23.0)
-- seqkit (≥2.0.0)
-- SPAdes (≥3.15.0)
-- MEGAHIT (≥1.2.9)
-- Flye (≥2.9)
-- hifiasm (≥0.16)
-- Autocycler
-- VirSorter2 (≥2.2.3)
-- GeNomad (≥1.7.0)
-- VIBRANT (≥1.2.1)
-- PhaBOX
-- DeepMicroClass
-- PLASMe
-- CheckV (≥1.0.1)
-- vclust (≥1.0.0)
-- iPHoP (≥1.4.1)
-- GTDB-Tk (≥2.0.0)
-- QUAST (≥5.0.2)
+Place all files in the `data/` directory before running the workflow.
 
-## Usage
+---
 
-Each script can be run independently or as part of the complete workflow:
+## 🧰 Environment Setup
+
+All tools can be installed using their corresponding YAML files in the `envs/` directory.  
+To create all environments at once, run the following command from the root of the repository:
 
 ```bash
+for f in envs/*.yml; do conda env create -f "$f"; done
+```
+
+---
+
+## 🚀 Usage
+
+Each step can be executed independently using the provided shell scripts inside the `scripts/` directory.
+
+Example:
+```bash
 # Step 0: Quality control
-cd scripts
-sbatch 00_qc_reads.sh
+bash scripts/00_qc_reads.sh
 
 # Step 1: Assembly
-sbatch 01_assemblies.sh
+bash scripts/01_assemblies.sh
 
-# Continue with subsequent steps...
+# Step 2: Consolidate assemblies
+bash scripts/02_consolidate_assemblies.sh
+
+# Step 3: Phage identification
+bash scripts/03_phage_id.sh
+
+# Step 4: Prediction processing
+bash scripts/04_process_preds.sh
+
+# Step 5: Phage quality check and clustering
+bash scripts/05_phage_qc.sh
+
 ```
 
 ## Citation
